@@ -7,12 +7,6 @@
  * Huffman File Compression Program
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <limits.h>
-#include <math.h>
-#include <stdbool.h>
 #include "combined_header.h"
 
 /* main:
@@ -50,7 +44,7 @@ int main(int argc, char ** argv)
 
    if(argc != 6)
    {
-      //("\nIncorrect number of arguments\n");
+      fprintf(stderr, "\nIncorrect number of arguments\n");
       return(EXIT_FAILURE);
    }
    long countArr[256] = { 0 }; // stores the number of occurences of each character in the file
@@ -119,7 +113,5 @@ int main(int argc, char ** argv)
    encode(argv[3], argv[1], argv[5], codeArray, countArr, topArray, treeHead, topTop);
    free_tree(treeHead);
    //free(huffTree);
-
-     
    return(EXIT_SUCCESS);
 }

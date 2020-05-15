@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 #include "combined_header.h"
-#include <limits.h>
-/*creat_encode_table
+/*create_encode_table
  * This function will take the head of the binary tree created previously and create the reference table used to encode teh file
  *
  * Parameters:

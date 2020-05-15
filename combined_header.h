@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
+#include <string.h>
+#include <limits.h>
 // binary search tree declariations
 typedef struct _treeNode
 {

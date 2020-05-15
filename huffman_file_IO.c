@@ -1,10 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "combined_header.h"
-#include <math.h>
 /*
  * file_to_array
- *  This function should take the file anf parse it into an array of treeNodes that will later on be compiled into a full tree
+ *  This function should take the file and parse it into an array of treeNodes that will later on be compiled into a full tree
  *
  * Parameters:
  *  - filename: the filename
@@ -18,7 +15,7 @@ long file_to_array(char * filename, long * countArr)
    FILE * fp = fopen(filename, "r");
    if (fp == NULL)
    {
-      //("\nFirst fopen failed\n");
+      fprintf(stderr, "\nFailed to open the file to be compressed\n");
       return(-1);
    }
    long numRead = 0;
@@ -33,7 +30,6 @@ long file_to_array(char * filename, long * countArr)
    fclose(fp);
    return(numRead);
 }
-
 
 /*
  * write_freq_file
@@ -50,32 +46,14 @@ int write_freq_file(char * filename, long * countArr)
    FILE * fp = fopen(filename, "w");
    if(fp == NULL)
    {
-      //("\nfopen for freq file failed\n");
+      fprintf(stderr, "\nFailed to open the frequency write file\n");
       return(-1);
    }
    fwrite(countArr, sizeof(long), 256, fp); 
    //("\nWrote the count file\n");
-   
    fclose(fp);
    return(1);
 }
-
-/*
- * write_top_file
- *  Writes the topology of the binary search tree to the an output file
- *
- * Parameters:
- *  - filename: the name of the file to output to 
- *  - treeHead: the head of the binary tree
- *
- * Return Value: 1 for succes -1 for fail
- */
-/*
-int write_top_file(char * filename, treeNode * treeHead)
-{
-   return(1);
-}
-*/
 
 int read_tree_topology(FILE * fp, treeNode * node, int * stack, int * topArray, int * top, int * topTop)
 {
@@ -118,4 +96,61 @@ int read_tree_topology(FILE * fp, treeNode * node, int * stack, int * topArray, 
    }
    return(1);
 }
+
+treeNode * create_tree_from_file(char * filename)
+{
+   FILE * fp = fopen(filename, "r");
+   if(fp == NULL)
+   {
+      fprintf(stderr, "\nFailed to open compressed file\n");
+      return(NULL);
+   }
+   long sizeOfTop;
+   int chk = fseek(fp, 0, sizeof(long)); // seek to where the # of charachers that store the topology info is
+   chk = fread(&sizeOfTop, sizeof(long), 1, fp);
+
+   
+
+}
+
+void tree_from_top(FILE * fp, long topSize, treeNode ** root, char readB, int bitPos, long numRead)
+{
+   if(numRead >= topSize)
+   {
+      return;
+   }
+   int curBit = findCurBit(fp, &readB, &bitPos); //returns the current bit and updates the read bit if the previous bit position was farther than 8
+   if(curBit == 0)
+   {
+      // create Head
+      if((*root) -> left != NULL)
+      {
+         (*root) -> left = // newly created head;
+         tree_from_top(fp, topSize, &((*root) -> left), readB, bitPos, numRead);
+      }
+      else
+      {
+         (*root) -> right = // newly created head;
+         tree_from_top(fp, topSize, &((*root) -> right), readB, bitPos, numRead);
+      }
+   }
+   while(curBit == 1)
+   {
+      char readChar = findChar(fp, &readB, &bitPos);
+      // create leaf node
+      if((*root) -> left != NULL)
+      {
+         (*root) -> left = //new leafNode;
+      }
+      else
+      {
+         (*root) -> right = // new leafNode;
+      }
+      curBit = findeCurBit(fp, &readB, &bitPos);
+   }
+
+
+
+
+
 
